@@ -19,6 +19,8 @@ jobs:
       - name: Run strategy validity tests (gate)
         run: node tests/strategy.test.js
       - name: Run strategist scan
+        env:
+          COINGECKO_KEY: ${{ secrets.COINGECKO_KEY }}
         run: node scripts/scan.js
       - name: Commit data
         run: |

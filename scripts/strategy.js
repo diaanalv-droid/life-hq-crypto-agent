@@ -80,6 +80,24 @@ function setupVerdict(c, ind) {
   return { label: 'Potential quantitative setup — not validated', proposal: s, qc, reason: 'ordered levels + R:R pass QC; strategy not yet backtested' };
 }
 
+function scenarios(c, ind) {
+  const ev = { for: [], against: [] };
+  const above50 = ind && ind.sma50 != null && c.price > ind.sma50;
+  const above200 = ind && ind.sma200 != null && c.price > ind.sma200;
+  if (above200) ev.for.push('Above 200-day average (long uptrend)'); else if (ind && ind.sma200 != null) ev.against.push('Below 200-day average (long downtrend)');
+  if (above50) ev.for.push('Above 50-day average'); else if (ind && ind.sma50 != null) ev.against.push('Below 50-day average');
+  if (ind && ind.rs30VsBtc != null) (ind.rs30VsBtc > 0 ? ev.for : ev.against).push(`Relative strength vs BTC (30d) ${round(ind.rs30VsBtc, 1)}%`);
+  if (c.liqRatio != null) (c.liqRatio > 0.02 ? ev.for : ev.against).push(`Liquidity vol/mcap ${round(c.liqRatio * 100, 2)}%`);
+  if (c.supplyInflationPct != null && c.supplyInflationPct > 25) ev.against.push(`Future dilution ~${round(c.supplyInflationPct, 0)}% of max not yet circulating`);
+  const dd = ind ? ind.drawdownPct : null;
+  return {
+    bull: `${c.sym} ${above200 ? 'holds its long uptrend' : 'reclaims the 200-day average'}${dd != null && dd < -40 ? ' and recovers part of its ' + round(-dd, 0) + '% drawdown' : ''}.`,
+    base: `${c.sym} ranges with the broad market; no directional edge.`,
+    bear: `${c.sym} loses key averages${c.supplyInflationPct > 25 ? ', dilution adds sell pressure,' : ''} and drawdown deepens.`,
+    evidenceFor: ev.for, evidenceAgainst: ev.against,
+  };
+}
+
 function sma(a, i, n) { if (i + 1 < n) return null; let s = 0; for (let k = i - n + 1; k <= i; k++) s += a[k]; return s / n; }
 function backtest(closes) {
   if (!closes || closes.length < 210) return { ok: false, reason: 'need >=210 candles' };
@@ -93,7 +111,16 @@ function backtest(closes) {
   if (inPos) trades.push(closes[closes.length - 1] / entry - 1);
   const wins = trades.filter(t => t > 0).length;
   const total = trades.reduce((a, b) => a + b, 0);
-  return { ok: true, trades: trades.length, winRatePct: trades.length ? round(wins / trades.length * 100, 1) : 0, avgReturnPct: trades.length ? round(total / trades.length * 100, 2) : 0, sumReturnPct: round(total * 100, 2), buyHoldPct: round(eqBuyHold * 100, 2), note: 'illustrative, close-only, no fees/slippage yet — NOT validated for real money' };
+  const MIN_TRADES = 20;
+  const evaluable = trades.length >= MIN_TRADES;
+  return {
+    ok: true, trades: trades.length, minTradesRequired: MIN_TRADES, evaluable, validated: false,
+    status: evaluable ? 'Sample size met — still requires an out-of-sample test before any validation' : 'Insufficient sample — strategy cannot be evaluated',
+    winRatePct: trades.length ? round(wins / trades.length * 100, 1) : null,
+    avgReturnPct: trades.length ? round(total / trades.length * 100, 2) : null,
+    sumReturnPct: round(total * 100, 2), buyHoldPct: round(eqBuyHold * 100, 2),
+    note: `close-only, no fees/slippage; NOT validated for real money; do NOT compare vs buy-hold with <${MIN_TRADES} trades`,
+  };
 }
 
-module.exports = { round, px, isStable, classify, buildLongSetup, validateProposal, projectQuality, longTermVerdict, setupVerdict, backtest };
+module.exports = { round, px, isStable, classify, buildLongSetup, validateProposal, projectQuality, longTermVerdict, setupVerdict, scenarios, backtest };

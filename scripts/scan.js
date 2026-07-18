@@ -1,7 +1,5 @@
 // Life HQ — Crypto Strategist pipeline v4 (GitHub Actions, Node 20).
-// Uses the unit-tested strategy engine (scripts/strategy.js). Three separated
-// conclusions, hard proposal-validity QC, non-actionable labels, backtest,
-// history caching, structured logging, Retry-After backoff, hard post-run validation.
+// Uses the unit-tested strategy engine (scripts/strategy.js).
 // Read-only. No trading. No LLM calls.
 
 const fs = require('fs');
@@ -44,6 +42,7 @@ function ams() { const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
 
 (async () => {
   const runTs = nowIso(), A = ams();
+  log('[cg] auth mode:', CG_KEY ? 'demo-key present (masked)' : 'anonymous (no key)');
   const activity = read('activity.json', []), health = read('health.json', { sources: {} });
   const meta = read('meta.json', { refreshes: [] }), paper = read('paper.json', { positions: [] });
   const watchlist = read('watchlist.json', { symbols: ['BTC', 'ETH'] });
@@ -96,10 +95,11 @@ function ams() { const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
   const verdicts = { ts: runTs, banner: BANNER, coins: {} }; let analysed = 0;
   for (const sym of shortSyms) {
     const c = bySym[sym]; if (!c) continue; const ind = indBySym[sym];
-    const setup = S.setupVerdict(c, ind), lt = S.longTermVerdict(c, ind, c.group, null), pq = S.projectQuality(c, null);
+    const setup = S.setupVerdict(c, ind), lt = S.longTermVerdict(c, ind, c.group, null), pq = S.projectQuality(c, null), sc = S.scenarios(c, ind);
     verdicts.coins[sym] = {
       name: c.name, symbol: sym, price: c.price, group: c.group, groupWhy: c.groupWhy, ts: runTs,
       conclusions: { projectQuality: pq, longTerm: lt, tradeSetup: { label: setup.label, reason: setup.reason, proposal: setup.proposal, qc: setup.qc } },
+      scenarios: { bull: sc.bull, base: sc.base, bear: sc.bear }, evidenceFor: sc.evidenceFor, evidenceAgainst: sc.evidenceAgainst, missingFundamentals: pq.missing,
       indicators: ind ? { sma20: ind.sma20, sma50: ind.sma50, sma200: ind.sma200, drawdownPct: ind.drawdownPct, rs30VsBtc: ind.rs30VsBtc } : null,
       confidence: ind && ind.samples >= 300 ? (c.group === 'established' ? 'High' : 'Medium') : ind ? 'Medium' : 'Low',
       houseFit: 'Crypto is a satellite/high-risk sleeve — NOT house-deposit money.',
