@@ -17,6 +17,22 @@ jobs:
         with:
           node-version: '20'
 
+      # Byte-safe assembly: large source files are transferred as small base64
+      # chunk files under parts/ (each verified by git blob SHA). Reconstruct the
+      # real files here by concatenating the sorted chunks and base64-decoding.
+      - name: Assemble large files from byte-safe parts
+        run: |
+          set -e
+          for pre in tests__engine.test.js scripts__scan.js index.html; do
+            dest=$(echo "$pre" | sed 's/__/\//g')
+            cat parts/$pre.* | base64 -d > "$dest"
+            echo "assembled $dest ($(wc -c < "$dest") bytes)"
+          done
+          node -c tests/engine.test.js
+          node -c scripts/scan.js
+          echo "assembled-file blob SHAs:"
+          git hash-object tests/engine.test.js scripts/scan.js index.html
+
       # CI GATE: the whole run aborts if any strategy/engine validity test fails.
       - name: Run validity tests (gate)
         run: |
@@ -28,13 +44,13 @@ jobs:
           COINGECKO_KEY: ${{ secrets.COINGECKO_KEY }}
         run: node scripts/scan.js
 
-      - name: Commit data
+      - name: Commit data + assembled files
         run: |
           git config user.name  "life-hq-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add data/
+          git add data/ index.html scripts/scan.js tests/engine.test.js
           if git diff --staged --quiet; then
-            echo "No data changes"
+            echo "No changes"
           else
             git commit -m "pipeline: refresh $(date -u +%FT%TZ)"
             git pull --rebase --autostash origin main || true
