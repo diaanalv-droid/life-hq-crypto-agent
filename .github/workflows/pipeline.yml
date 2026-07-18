@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       force_fail:
-        description: 'Force a data-source failure for demo (crypto.com | coingecko | none)'
+        description: 'unused'
         required: false
         default: 'none'
 permissions:
@@ -21,10 +21,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run pipeline
-        env:
-          FORCE_FAIL: ${{ github.event.inputs.force_fail }}
-        run: node scripts/pipeline.js
+      - name: Run strategist scan
+        run: node scripts/scan.js
       - name: Commit data
         run: |
           git config user.name  "life-hq-bot"
@@ -33,6 +31,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No data changes"
           else
-            git commit -m "pipeline: refresh $(date -u +%FT%TZ)"
+            git commit -m "scan: refresh $(date -u +%FT%TZ)"
             git push
           fi
