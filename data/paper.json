@@ -14,10 +14,10 @@
       "entryPrice": 64150,
       "entryTs": "2026-07-18T16:39:20Z",
       "feesPaid": 1.44,
-      "markPrice": 64174.74,
-      "markTs": "2026-07-18T16:49:45.737Z",
-      "unrealizedPnl": -1.07,
-      "pnlPct": 0.04
+      "markPrice": 64286.36,
+      "markTs": "2026-07-18T16:54:04.590Z",
+      "unrealizedPnl": 0.61,
+      "pnlPct": 0.21
     }
   ],
   "transactions": [

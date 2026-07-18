@@ -1,47 +1,48 @@
 {
   "app": "Life HQ — Crypto Intelligence Agent",
   "milestone": 1,
-  "lastRefresh": "2026-07-18T16:49:45.737Z",
-  "lastRefreshAmsterdam": "2026-07-18 18:49 Europe/Amsterdam",
+  "lastRefresh": "2026-07-18T16:54:04.590Z",
+  "lastRefreshAmsterdam": "2026-07-18 18:54 Europe/Amsterdam",
   "refreshes": [
+    "2026-07-18T16:54:04.590Z",
     "2026-07-18T16:49:45.737Z",
     "2026-07-18T16:39:19.955Z"
   ],
   "intervalPolicy": "GitHub Actions cron */15 (min ~5m, best-effort) + manual dispatch",
   "latest": {
     "BTC": {
-      "ts": "2026-07-18T16:49:45.737Z",
+      "ts": "2026-07-18T16:54:04.590Z",
       "symbol": "BTC",
-      "price": 64174.74,
-      "volume": 945.0904,
+      "price": 64286.36,
+      "volume": 945.2662,
       "source": "crypto.com",
       "validatedAgainst": "coingecko",
-      "altPrice": 64109,
-      "deviationPct": 0.103,
-      "validated": true
+      "altPrice": null,
+      "deviationPct": null,
+      "validated": false
     },
     "ETH": {
-      "ts": "2026-07-18T16:49:45.737Z",
+      "ts": "2026-07-18T16:54:04.590Z",
       "symbol": "ETH",
-      "price": 1844.48,
-      "volume": 10755.47,
+      "price": 1846.46,
+      "volume": 10794.3095,
       "source": "crypto.com",
       "validatedAgainst": "coingecko",
-      "altPrice": 1843.29,
-      "deviationPct": 0.065,
-      "validated": true
+      "altPrice": null,
+      "deviationPct": null,
+      "validated": false
     }
   },
   "regime": {
     "BTC": {
       "label": "Insufficient data",
       "method": "need >= 4 samples",
-      "samples": 2
+      "samples": 3
     },
     "ETH": {
       "label": "Insufficient data",
       "method": "need >= 4 samples",
-      "samples": 2
+      "samples": 3
     }
   },
   "portfolio": {

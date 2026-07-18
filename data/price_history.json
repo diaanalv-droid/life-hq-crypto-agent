@@ -44,5 +44,27 @@
     "altPrice": 1843.29,
     "deviationPct": 0.065,
     "validated": true
+  },
+  {
+    "ts": "2026-07-18T16:54:04.590Z",
+    "symbol": "BTC",
+    "price": 64286.36,
+    "volume": 945.2662,
+    "source": "crypto.com",
+    "validatedAgainst": "coingecko",
+    "altPrice": null,
+    "deviationPct": null,
+    "validated": false
+  },
+  {
+    "ts": "2026-07-18T16:54:04.590Z",
+    "symbol": "ETH",
+    "price": 1846.46,
+    "volume": 10794.3095,
+    "source": "crypto.com",
+    "validatedAgainst": "coingecko",
+    "altPrice": null,
+    "deviationPct": null,
+    "validated": false
   }
 ]

@@ -1,5 +1,52 @@
 [
   {
+    "ts": "2026-07-18T16:54:04.590Z",
+    "type": "refresh",
+    "detail": "pipeline run · 2 priced · sources ok=1",
+    "symbols": {
+      "BTC": {
+        "ts": "2026-07-18T16:54:04.590Z",
+        "symbol": "BTC",
+        "price": 64286.36,
+        "volume": 945.2662,
+        "source": "crypto.com",
+        "validatedAgainst": "coingecko",
+        "altPrice": null,
+        "deviationPct": null,
+        "validated": false
+      },
+      "ETH": {
+        "ts": "2026-07-18T16:54:04.590Z",
+        "symbol": "ETH",
+        "price": 1846.46,
+        "volume": 10794.3095,
+        "source": "crypto.com",
+        "validatedAgainst": "coingecko",
+        "altPrice": null,
+        "deviationPct": null,
+        "validated": false
+      }
+    }
+  },
+  {
+    "ts": "2026-07-18T16:54:04.590Z",
+    "type": "validation_warning",
+    "symbol": "ETH",
+    "detail": "crypto.com vs coingecko deviate Infinity%"
+  },
+  {
+    "ts": "2026-07-18T16:54:04.590Z",
+    "type": "validation_warning",
+    "symbol": "BTC",
+    "detail": "crypto.com vs coingecko deviate Infinity%"
+  },
+  {
+    "ts": "2026-07-18T16:54:04.590Z",
+    "type": "data_failure",
+    "source": "coingecko",
+    "detail": "FORCED FAILURE (demo): coingecko"
+  },
+  {
     "ts": "2026-07-18T16:49:45.737Z",
     "type": "refresh",
     "detail": "pipeline run · 2 priced · sources ok=2",

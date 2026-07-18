@@ -2,12 +2,13 @@
   "sources": {
     "crypto.com": {
       "status": "ok",
-      "lastOk": "2026-07-18T16:49:45.737Z",
-      "latencyMs": 143
+      "lastOk": "2026-07-18T16:54:04.590Z",
+      "latencyMs": 186
     },
     "coingecko": {
-      "status": "ok",
-      "lastOk": "2026-07-18T16:49:45.737Z"
+      "status": "error",
+      "lastError": "FORCED FAILURE (demo): coingecko",
+      "at": "2026-07-18T16:54:04.590Z"
     }
   }
 }
