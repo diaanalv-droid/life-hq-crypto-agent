@@ -1,4 +1,48 @@
 [
-  { "ts": "2026-07-18T16:39:18.715Z", "symbol": "BTC", "price": 64150.00, "volume": 961.2305, "source": "crypto.com", "validatedAgainst": null, "altPrice": null, "deviationPct": null, "validated": null, "seed": true },
-  { "ts": "2026-07-18T16:39:19.955Z", "symbol": "ETH", "price": 1843.65, "volume": 10841.4574, "source": "crypto.com", "validatedAgainst": null, "altPrice": null, "deviationPct": null, "validated": null, "seed": true }
+  {
+    "ts": "2026-07-18T16:39:18.715Z",
+    "symbol": "BTC",
+    "price": 64150,
+    "volume": 961.2305,
+    "source": "crypto.com",
+    "validatedAgainst": null,
+    "altPrice": null,
+    "deviationPct": null,
+    "validated": null,
+    "seed": true
+  },
+  {
+    "ts": "2026-07-18T16:39:19.955Z",
+    "symbol": "ETH",
+    "price": 1843.65,
+    "volume": 10841.4574,
+    "source": "crypto.com",
+    "validatedAgainst": null,
+    "altPrice": null,
+    "deviationPct": null,
+    "validated": null,
+    "seed": true
+  },
+  {
+    "ts": "2026-07-18T16:49:45.737Z",
+    "symbol": "BTC",
+    "price": 64174.74,
+    "volume": 945.0904,
+    "source": "crypto.com",
+    "validatedAgainst": "coingecko",
+    "altPrice": 64109,
+    "deviationPct": 0.103,
+    "validated": true
+  },
+  {
+    "ts": "2026-07-18T16:49:45.737Z",
+    "symbol": "ETH",
+    "price": 1844.48,
+    "volume": 10755.47,
+    "source": "crypto.com",
+    "validatedAgainst": "coingecko",
+    "altPrice": 1843.29,
+    "deviationPct": 0.065,
+    "validated": true
+  }
 ]

@@ -1,1 +1,10 @@
-{ "date": null, "note": "First daily briefing is generated on the next pipeline run, in Europe/Amsterdam time." }
+{
+  "date": "2026-07-18",
+  "note": "First daily briefing is generated on the next pipeline run, in Europe/Amsterdam time.",
+  "generatedAt": "2026-07-18T16:49:45.737Z",
+  "timezone": "Europe/Amsterdam",
+  "lines": [
+    "BTC: $64,174.74 · regime Insufficient data (drift —%, vol —%) · source crypto.com ✓validated",
+    "ETH: $1,844.48 · regime Insufficient data (drift —%, vol —%) · source crypto.com ✓validated"
+  ]
+}
