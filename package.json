@@ -1,0 +1,10 @@
+{
+  "name": "life-hq-crypto-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Life HQ — Crypto Intelligence Agent (Milestone 1): read-only market monitoring, paper trading, GitHub Actions pipeline.",
+  "scripts": {
+    "pipeline": "node scripts/pipeline.js"
+  },
+  "license": "MIT"
+}
