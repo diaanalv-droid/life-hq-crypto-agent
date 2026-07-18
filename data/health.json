@@ -1,14 +1,1 @@
-{
-  "sources": {
-    "crypto.com": {
-      "status": "ok",
-      "lastOk": "2026-07-18T16:54:04.590Z",
-      "latencyMs": 186
-    },
-    "coingecko": {
-      "status": "error",
-      "lastError": "FORCED FAILURE (demo): coingecko",
-      "at": "2026-07-18T16:54:04.590Z"
-    }
-  }
-}
+{"sources":{"crypto.com":{"status":"ok","lastOk":"2026-07-18T17:29:38.623Z"},"coingecko":{"status":"ok","lastOk":"2026-07-18T17:29:38.623Z"},"coingecko-markets":{"status":"ok","lastOk":"2026-07-18T17:29:38.623Z","count":100}}}

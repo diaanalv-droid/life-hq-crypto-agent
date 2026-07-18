@@ -1,10 +1,1 @@
-{
-  "date": "2026-07-18",
-  "note": "First daily briefing is generated on the next pipeline run, in Europe/Amsterdam time.",
-  "generatedAt": "2026-07-18T16:49:45.737Z",
-  "timezone": "Europe/Amsterdam",
-  "lines": [
-    "BTC: $64,174.74 · regime Insufficient data (drift —%, vol —%) · source crypto.com ✓validated",
-    "ETH: $1,844.48 · regime Insufficient data (drift —%, vol —%) · source crypto.com ✓validated"
-  ]
-}
+{"date":"2026-07-18","timezone":"Europe/Amsterdam","generatedAt":"2026-07-18T17:29:38.623Z","regime":"Ranging","btcDominance":56.5,"conclusions":["Long-term interest: SOL (Accumulate candidate), USDC (Hold)","Short-term setups: BTC (Buy-zone candidate), ETH (Buy-zone candidate), SOL (Wait for confirmation), ONDO (Buy-zone candidate), LTC (Buy-zone candidate)","Deep drawdowns to investigate: XRP, SOL, DOGE, ZEC","Avoid/high-risk flagged: 10 assets"],"risks":["Regime Ranging","Crypto is satellite risk, never house-deposit money"],"researchPriorities":["USDT: gather history/fundamentals","AAVE: gather history/fundamentals","DEXE: gather history/fundamentals","PEPE: gather history/fundamentals"]}
