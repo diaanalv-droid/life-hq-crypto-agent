@@ -1,0 +1,6 @@
+{
+  "sources": {
+    "crypto.com": { "status": "ok", "lastOk": "2026-07-18T16:39:19.955Z", "note": "seed via Crypto.com public ticker" },
+    "coingecko": { "status": "unknown", "note": "validation source — first checked on next pipeline run" }
+  }
+}

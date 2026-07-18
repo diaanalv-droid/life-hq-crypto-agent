@@ -1,0 +1,14 @@
+{
+  "mode": "PAPER — NO REAL MONEY",
+  "baseCurrency": "USD",
+  "startingCash": 10000,
+  "cash": 9037.15,
+  "feeBps": 15,
+  "startedAt": "2026-07-18T16:39:20Z",
+  "positions": [
+    { "id": "pp-001", "symbol": "BTC", "side": "long", "qty": 0.015, "entryPrice": 64150.00, "entryTs": "2026-07-18T16:39:20Z", "feesPaid": 1.44, "markPrice": 64150.00, "markTs": "2026-07-18T16:39:20Z", "unrealizedPnl": -1.44, "pnlPct": 0.0 }
+  ],
+  "transactions": [
+    { "ts": "2026-07-18T16:39:20Z", "type": "BUY", "symbol": "BTC", "qty": 0.015, "price": 64150.00, "fee": 1.44, "note": "seed paper position (PAPER)" }
+  ]
+}

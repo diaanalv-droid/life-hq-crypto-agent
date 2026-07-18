@@ -1,0 +1,4 @@
+[
+  { "ts": "2026-07-18T16:39:18.715Z", "symbol": "BTC", "price": 64150.00, "volume": 961.2305, "source": "crypto.com", "validatedAgainst": null, "altPrice": null, "deviationPct": null, "validated": null, "seed": true },
+  { "ts": "2026-07-18T16:39:19.955Z", "symbol": "ETH", "price": 1843.65, "volume": 10841.4574, "source": "crypto.com", "validatedAgainst": null, "altPrice": null, "deviationPct": null, "validated": null, "seed": true }
+]

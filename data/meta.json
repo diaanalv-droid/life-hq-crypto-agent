@@ -1,0 +1,14 @@
+{
+  "app": "Life HQ — Crypto Intelligence Agent",
+  "milestone": 1,
+  "lastRefresh": "2026-07-18T16:39:19.955Z",
+  "lastRefreshAmsterdam": "2026-07-18 18:39 Europe/Amsterdam",
+  "refreshes": ["2026-07-18T16:39:19.955Z"],
+  "intervalPolicy": "GitHub Actions cron */15 (min ~5m, best-effort) + manual dispatch",
+  "latest": {
+    "BTC": { "ts": "2026-07-18T16:39:18.715Z", "symbol": "BTC", "price": 64150.00, "source": "crypto.com", "validated": null },
+    "ETH": { "ts": "2026-07-18T16:39:19.955Z", "symbol": "ETH", "price": 1843.65, "source": "crypto.com", "validated": null }
+  },
+  "regime": {},
+  "portfolio": { "status": "not_connected", "note": "Personal Crypto.com balances require a read-only API key you create. Stays disconnected until then." }
+}
