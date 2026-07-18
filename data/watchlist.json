@@ -1,1 +1,1 @@
-{ "symbols": ["BTC", "ETH"], "updatedAt": "2026-07-18T16:39:20Z" }
+{ "symbols": ["BTC", "ETH", "SOL"], "updatedAt": "2026-07-18T16:52:00Z", "lastChange": "added SOL (persistence proof)" }

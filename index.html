@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Life HQ · Crypto Room</title>
+<style>
+  :root{--bg:#eef2f9;--card:#fff;--ink:#28303f;--muted:#6d7a8d;--line:#d7dfeb;--soft:#f4f7fc;--mint:#2fa877;--sky:#2769b8;--amber:#c98a1b;--red:#c23b52;--sh:0 10px 28px -16px rgba(40,60,90,.4)}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px}
+  .top{display:flex;align-items:center;gap:12px;padding:12px 18px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  .crumb{color:var(--muted);font-size:13px}.crumb b{color:var(--ink)}
+  .mk{width:24px;height:24px;border-radius:7px;background:conic-gradient(from 210deg,#2769b8,#8f7de0,#e6b24e,#2fa877,#2769b8)}
+  .tabs{display:flex;gap:3px;margin-left:auto;flex-wrap:wrap}
+  .tab{padding:6px 12px;border-radius:9px;color:var(--muted);cursor:pointer;font-weight:600;font-size:13px;border:1px solid transparent}
+  .tab.active{background:var(--soft);color:var(--ink);border-color:var(--line)}
+  .wrap{max-width:1080px;margin:0 auto;padding:18px}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+  .c6{grid-column:span 6}.c12{grid-column:span 12}
+  @media(max-width:820px){.c6{grid-column:span 12}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px 16px;box-shadow:var(--sh)}
+  h3{margin:0 0 3px;font-size:15px}h4{margin:0 0 8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .muted{color:var(--muted)}.big{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+  .row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:13.5px}.row:last-child{border:none}
+  .prov{display:inline-flex;gap:5px;align-items:center;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:20px;background:#e9f1fb;color:var(--sky)}
+  .ok{color:var(--mint)}.err{color:var(--red)}.warn{color:var(--amber)}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+  .btn{font-size:12px;font-weight:700;padding:6px 11px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer}
+  .paper{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;color:#8a5a00;background:#fff3d6;border:1px solid #f0d79a;padding:2px 8px;border-radius:6px}
+  table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--muted);font-size:11px;text-transform:uppercase}
+  .view{display:none}.view.active{display:block}
+  .link{color:var(--sky);cursor:pointer;font-weight:700}
+  .modal{position:fixed;inset:0;background:rgba(20,30,50,.45);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}.modal.open{display:flex}
+  .sheet{background:#fff;border-radius:16px;max-width:560px;width:100%;padding:18px;box-shadow:var(--sh)}
+  input{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:14px}
+  .banner{background:#fff8e6;border:1px solid #f0d79a;border-radius:10px;padding:8px 12px;font-size:12.5px;color:#7a5600;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="top"><span class="mk"></span>
+  <span class="crumb">Life&nbsp;HQ&nbsp;›&nbsp;Headquarters&nbsp;›&nbsp;<b>Crypto Room</b>&nbsp;›&nbsp;<b>Crypto Dashboard</b></span>
+  <div class="tabs">
+    <div class="tab active" data-v="dash">Dashboard</div>
+    <div class="tab" data-v="watch">Watchlist</div>
+    <div class="tab" data-v="paper">Paper Trading</div>
+    <div class="tab" data-v="log">Activity</div>
+    <div class="tab" data-v="health">Connections</div>
+  </div>
+</div>
+<div class="wrap">
+  <div id="loadErr" class="banner" style="display:none"></div>
+  <div class="view active" id="v-dash"><div class="grid">
+    <div class="card c12" id="statusCard"></div>
+    <div class="card c6" id="btcCard"></div>
+    <div class="card c6" id="ethCard"></div>
+    <div class="card c6"><h4>Portfolio</h4><div id="portfolio"></div></div>
+    <div class="card c6"><h4>Daily briefing · Europe/Amsterdam</h4><div id="briefing" class="muted">—</div></div>
+  </div></div>
+  <div class="view" id="v-watch"><div class="card"><h4>Watchlist</h4><div id="watchBody"></div>
+    <div style="margin-top:10px;display:flex;gap:8px"><input id="wlInput" placeholder="Add symbol e.g. SOL" style="width:160px"/><button class="btn" onclick="proposeWatch()">Add</button></div>
+    <div id="wlNote" class="muted" style="font-size:12px;margin-top:8px"></div></div></div>
+  <div class="view" id="v-paper">
+    <div class="banner"><span class="paper">PAPER — NO REAL MONEY</span> &nbsp;Simulated positions priced from the real pipeline. No exchange keys, no execution.</div>
+    <div class="card"><h4>Paper account</h4><div id="paperHead"></div></div>
+    <div class="card" style="margin-top:12px"><h4>Positions</h4><div id="paperPos"></div></div>
+    <div class="card" style="margin-top:12px"><h4>Transactions</h4><div id="paperTx"></div></div></div>
+  <div class="view" id="v-log"><div class="card"><h4>Agent activity log</h4><div id="logBody"></div></div></div>
+  <div class="view" id="v-health"><div class="card"><h4>Connections &amp; data health</h4><div id="healthBody"></div><div id="refreshLog" style="margin-top:12px"></div></div></div>
+</div>
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<script>
+const $ = s => document.querySelector(s);
+const fmt = n => Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+const ago = iso => { const s=(Date.now()-new Date(iso))/1000; if(s<90)return Math.round(s)+'s ago'; if(s<5400)return Math.round(s/60)+'m ago'; return Math.round(s/3600)+'h ago'; };
+let DB = {};
+async function load(){
+  const files=['meta','price_history','watchlist','paper','activity','health','briefing'];
+  try{
+    const res=await Promise.all(files.map(f=>fetch('data/'+f+'.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(f+' '+r.status);return r.json()})));
+    files.forEach((f,i)=>DB[f]=res[i]); render();
+  }catch(e){ $('#loadErr').style.display='block'; $('#loadErr').textContent='⚠ Could not load pipeline data ('+e.message+'). On a fresh deploy the first Action may not have committed yet.'; }
+}
+function statusHtml(){
+  const m=DB.meta||{}; const h=DB.health||{sources:{}}; const cdc=h.sources['crypto.com']||{}; const cg=h.sources['coingecko']||{};
+  const err=Object.values(h.sources).some(s=>s.status==='error');
+  return '<div style="display:flex;flex-wrap:wrap;gap:22px;align-items:center">'+
+    '<div><div class="muted" style="font-size:12px">Last refresh</div><div class="big" style="font-size:18px">'+(m.lastRefresh?ago(m.lastRefresh):'—')+'</div><div class="muted" style="font-size:12px">'+(m.lastRefreshAmsterdam||'')+'</div></div>'+
+    '<div><div class="muted" style="font-size:12px">Primary source</div><div><span class="dot" style="background:'+(cdc.status==='ok'?'#2fa877':cdc.status==='error'?'#c23b52':'#c98a1b')+'"></span>Crypto.com · '+(cdc.status||'—')+'</div><div class="muted" style="font-size:12px">Validate: CoinGecko · '+(cg.status||'—')+'</div></div>'+
+    '<div><div class="muted" style="font-size:12px">Refresh status</div><div class="'+(err?'err':'ok')+'">'+(err?'⚠ a source is failing':'● healthy')+'</div><div class="muted" style="font-size:12px">policy: '+(m.intervalPolicy||'—')+'</div></div>'+
+    '<div style="margin-left:auto"><span class="prov">source-verified · reads from pipeline</span></div></div>';
+}
+function assetCard(sym){
+  const m=DB.meta||{}; const l=(m.latest||{})[sym]; const rg=(m.regime||{})[sym]||{};
+  if(!l) return '<h3>'+sym+'</h3><div class="muted">No data yet.</div>';
+  const val = l.validated===true?'<span class="ok">✓ validated</span>':l.validated===false?'<span class="warn">⚠ unvalidated</span>':'<span class="muted">validation pending</span>';
+  return '<div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h3>'+sym+'/USD</h3><div class="big">$'+fmt(l.price)+'</div></div><div style="text-align:right"><div class="muted" style="font-size:12px">'+l.source+'</div><div style="font-size:12px">'+(l.ts?ago(l.ts):'')+'</div>'+val+'</div></div>'+
+    '<div class="row"><span>Market regime</span><b>'+(rg.label||'—')+'</b></div>'+
+    '<div class="row"><span>Drift / volatility</span><span>'+(rg.driftPct??'—')+'% / '+(rg.volatilityPct??'—')+'%</span></div>'+
+    '<div style="margin-top:8px"><span class="link" onclick="openAsset(\''+sym+'\')">Open asset detail →</span></div>';
+}
+function openAsset(sym){
+  const hist=(DB.price_history||[]).filter(h=>h.symbol===sym); const pts=hist.slice(-80).map(h=>h.price); const last=hist[hist.length-1]||{};
+  let spark='<div class="muted">Not enough history yet — the pipeline builds this over time.</div>';
+  if(pts.length>1){const mn=Math.min(...pts),mx=Math.max(...pts),W=480,H=120; const d=pts.map((p,i)=>(i/(pts.length-1)*W).toFixed(1)+','+(H-(mx===mn?H/2:(p-mn)/(mx-mn)*H)).toFixed(1)).join(' ');
+    spark='<svg viewBox="0 0 '+W+' '+H+'" width="100%" height="120" style="background:#f6f9fe;border-radius:8px"><polyline points="'+d+'" fill="none" stroke="#2769b8" stroke-width="2"/></svg><div class="muted" style="font-size:12px">'+pts.length+' points · low $'+fmt(mn)+' · high $'+fmt(mx)+'</div>';}
+  $('#sheet').innerHTML='<div style="display:flex;justify-content:space-between"><h3>'+sym+'/USD · detail</h3><span class="link" onclick="closeModal()">✕</span></div><div class="big">$'+fmt(last.price||0)+'</div><div class="muted" style="font-size:12px;margin-bottom:8px">source '+(last.source||'—')+' · '+(last.ts?ago(last.ts):'')+' · vol '+fmt(last.volume||0)+'</div>'+spark+
+    '<h4 style="margin-top:14px">Data provenance</h4><div class="row"><span>Primary</span><b>Crypto.com public ticker</b></div><div class="row"><span>Validated against</span><b>CoinGecko ('+(last.deviationPct??'—')+'% dev)</b></div><div class="row"><span>Stored records</span><b>'+hist.length+'</b></div>'+
+    '<h4 style="margin-top:14px">Research</h4><div class="muted" style="font-size:13px">News &amp; catalyst feed connects in a later step. Portfolio &amp; on-chain remain read-only.</div>';
+  $('#modal').classList.add('open');
+}
+function closeModal(){$('#modal').classList.remove('open');}
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+function render(){
+  $('#statusCard').innerHTML=statusHtml(); $('#btcCard').innerHTML=assetCard('BTC'); $('#ethCard').innerHTML=assetCard('ETH');
+  const pf=(DB.meta&&DB.meta.portfolio)||{status:'not_connected'};
+  $('#portfolio').innerHTML='<div style="text-align:center;padding:8px 0"><div style="font-size:22px">🔌</div><b>'+(pf.status==='not_connected'?'Not connected':pf.status)+'</b><div class="muted" style="font-size:12.5px">'+(pf.note||'')+'</div><button class="btn" style="margin-top:8px" onclick="alert(\'You will create a Crypto.com READ-ONLY API key. No trade/withdraw scope. Not enabled in Milestone 1.\')">How read-only connect will work</button></div>';
+  const b=DB.briefing||{}; $('#briefing').innerHTML = b.lines&&b.lines.length? ('<div class="muted" style="font-size:12px">'+b.date+' · '+b.timezone+'</div>'+b.lines.map(l=>'<div class="row">'+l+'</div>').join('')) : (b.note||'First briefing generates on the next run.');
+  const wl=DB.watchlist||{symbols:[]};
+  $('#watchBody').innerHTML='<table><tr><th>Symbol</th><th>Last price</th><th>Source</th><th></th></tr>'+wl.symbols.map(s=>{const l=((DB.meta||{}).latest||{})[s]||{};return '<tr><td><b>'+s+'</b></td><td>'+(l.price?'$'+fmt(l.price):'—')+'</td><td class="muted">'+(l.source||'—')+'</td><td><span class="link" onclick="openAsset(\''+s+'\')">detail</span></td></tr>';}).join('')+'</table>';
+  $('#wlNote').textContent='Updated '+(wl.updatedAt?ago(wl.updatedAt):'—')+'. '+(wl.lastChange||'')+' — persisted in the repo database.';
+  const p=DB.paper||{positions:[],transactions:[]}; const upnl=p.positions.reduce((a,x)=>a+(x.unrealizedPnl||0),0);
+  $('#paperHead').innerHTML='<div class="row"><span>Mode</span><span class="paper">'+(p.mode||'PAPER')+'</span></div><div class="row"><span>Starting / cash</span><span>$'+fmt(p.startingCash||0)+' / $'+fmt(p.cash||0)+'</span></div><div class="row"><span>Open unrealised P&amp;L</span><b class="'+(upnl>=0?'ok':'err')+'">'+(upnl>=0?'+':'')+'$'+fmt(upnl)+'</b></div><div class="row"><span>Fee model</span><span>'+(p.feeBps||0)+' bps</span></div>';
+  $('#paperPos').innerHTML=p.positions.length?'<table><tr><th>Symbol</th><th>Side</th><th>Qty</th><th>Entry</th><th>Mark</th><th>uP&amp;L</th></tr>'+p.positions.map(x=>'<tr><td><b>'+x.symbol+'</b></td><td>'+x.side+'</td><td>'+x.qty+'</td><td>$'+fmt(x.entryPrice)+'</td><td>'+(x.markPrice?'$'+fmt(x.markPrice):'—')+'</td><td class="'+((x.unrealizedPnl||0)>=0?'ok':'err')+'">'+((x.unrealizedPnl||0)>=0?'+':'')+'$'+fmt(x.unrealizedPnl||0)+' ('+(x.pnlPct??0)+'%)</td></tr>').join('')+'</table>':'<div class="muted">No open positions.</div>';
+  $('#paperTx').innerHTML='<table><tr><th>Time</th><th>Type</th><th>Symbol</th><th>Qty</th><th>Price</th><th>Fee</th></tr>'+(p.transactions||[]).map(t=>'<tr><td class="muted">'+ago(t.ts)+'</td><td>'+t.type+'</td><td>'+t.symbol+'</td><td>'+t.qty+'</td><td>$'+fmt(t.price)+'</td><td>$'+fmt(t.fee||0)+'</td></tr>').join('')+'</table>';
+  $('#logBody').innerHTML='<table><tr><th>Time</th><th>Type</th><th>Detail</th></tr>'+(DB.activity||[]).slice(0,60).map(a=>'<tr><td class="muted">'+ago(a.ts)+'</td><td>'+a.type+'</td><td>'+(a.detail||a.source||'')+(a.symbol?' · '+a.symbol:'')+'</td></tr>').join('')+'</table>';
+  const h=DB.health||{sources:{}};
+  $('#healthBody').innerHTML=Object.entries(h.sources).map(([k,v])=>'<div class="row"><span><span class="dot" style="background:'+(v.status==='ok'?'#2fa877':v.status==='error'?'#c23b52':'#c98a1b')+'"></span>'+k+'</span><span>'+v.status+(v.latencyMs?' · '+v.latencyMs+'ms':'')+(v.lastError?' · '+v.lastError:'')+'</span></div>').join('');
+  const rl=(DB.meta||{}).refreshes||[]; $('#refreshLog').innerHTML='<h4>Last refresh timestamps</h4>'+(rl.length?rl.slice(0,6).map(t=>'<div class="row"><span>'+t+'</span><span class="muted">'+ago(t)+'</span></div>').join(''):'<div class="muted">—</div>');
+}
+function proposeWatch(){const v=($('#wlInput').value||'').trim().toUpperCase(); if(!v)return; $('#wlNote').innerHTML='⏳ To persist "'+v+'" the write-backend (serverless fn + scoped GitHub token) is wired next. Watchlist changes commit to the repo so they survive reload.';}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('v-'+t.dataset.v).classList.add('active');});
+load();
+</script>
+</body>
+</html>
