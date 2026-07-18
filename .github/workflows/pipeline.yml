@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Run strategy validity tests (gate)
+        run: node tests/strategy.test.js
       - name: Run strategist scan
         run: node scripts/scan.js
       - name: Commit data
