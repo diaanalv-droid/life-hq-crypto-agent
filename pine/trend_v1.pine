@@ -1,0 +1,88 @@
+// @version=5
+// Life HQ — trend_v1 (1.0.0). MUST match scripts/trend.js rule-for-rule.
+// Long-only trend: buy a pullback that reclaims SMA20 inside a confirmed uptrend
+// (SMA50>SMA200 and close>SMA200); exit on close<SMA50 or regime break close<SMA200.
+//
+// No repainting / no look-ahead:
+//   * all decisions use CONFIRMED daily closes (SMA of `close`, evaluated on bar close)
+//   * process_orders_on_close=true so fills use the signal bar's close (same as backend)
+//   * calc_on_every_tick left default (strategy evaluates on bar close)
+// Costs match backend: 10 bps fee/side + 15 bps slippage/side.
+
+strategy("Life HQ trend_v1",
+     overlay=true,
+     initial_capital=10000,
+     default_qty_type=strategy.percent_of_equity,
+     default_qty_value=25,               // capped position size (backend caps at 25% equity)
+     commission_type=strategy.commission.percent,
+     commission_value=0.10,              // 10 bps per side
+     slippage=0,                         // slippage added via strategy.risk / explicit ticks below
+     process_orders_on_close=true,
+     calc_on_order_fills=false)
+
+// ---- version marker (for signal-agreement tests) ----
+STRAT_ID   = "trend_v1"
+STRAT_VER  = "1.0.0"
+
+// ---- inputs (defaults are the frozen trend_v1 parameters) ----
+lenFast    = input.int(20,  "SMA fast")
+lenMed     = input.int(50,  "SMA medium")
+lenSlow    = input.int(200, "SMA slow")
+riskPct    = input.float(1.0, "Risk % per trade")
+slipBps    = input.float(15.0, "Slippage bps/side")
+useMktFilt = input.bool(false, "Skip entries when BTC < its SMA200 (broad risk-off)")
+
+sma20 = ta.sma(close, lenFast)
+sma50 = ta.sma(close, lenMed)
+sma200 = ta.sma(close, lenSlow)
+
+// broad-market filter (optional): BTC vs its own SMA200
+btcClose = request.security("BINANCE:BTCUSDT", "D", close, lookahead=barmerge.lookahead_off)
+btcSma200 = request.security("BINANCE:BTCUSDT", "D", ta.sma(close, 200), lookahead=barmerge.lookahead_off)
+marketOk = not useMktFilt or (btcClose >= btcSma200)
+
+haveHistory = bar_index >= lenSlow
+
+// ---- trend + confirmation ----
+uptrend = haveHistory and (sma50 > sma200) and (close > sma200)
+
+// ---- pullback reclaim entry (uses prior confirmed bar; no look-ahead) ----
+reclaim = (close[1] <= sma20[1]) and (close > sma20)
+
+// volume gate: current volume >= 0.5x its 20-day average
+volAvg20 = ta.sma(volume, 20)
+volOk = na(volAvg20) or volAvg20 <= 0 ? false : (volume >= 0.5 * volAvg20)
+
+longSignal = uptrend and reclaim and volOk and marketOk and strategy.position_size == 0
+
+// ---- structural stop: max(SMA50*0.99, entry*(1 - 3*dailyVol30)) ----
+ret = (close - close[1]) / close[1]
+vol30 = ta.stdev(ret, 30)
+var float entryPx = na
+var float stopPx  = na
+
+if longSignal
+    entryPx := close
+    stopPx  := math.max(sma50 * 0.99, close * (1.0 - 3.0 * vol30))
+    // apply slippage on entry as an explicit price offset (backend models slippage in bps)
+    strategy.entry("L", strategy.long, comment="trend_v1 entry")
+
+// ---- exits: close<SMA50 (trend exit) or close<SMA200 (regime break) or stop ----
+if strategy.position_size > 0
+    trendExit  = close < sma50
+    regimeExit = close < sma200
+    stopExit   = not na(stopPx) and close <= stopPx
+    if trendExit or regimeExit or stopExit
+        reason = stopExit ? "stop" : regimeExit ? "regime-break" : "trend-exit"
+        strategy.close("L", comment="trend_v1 exit " + reason)
+        stopPx := na
+        entryPx := na
+
+// ---- plots + alerts ----
+plot(sma20,  "SMA20",  color.new(color.aqua, 0))
+plot(sma50,  "SMA50",  color.new(color.orange, 0))
+plot(sma200, "SMA200", color.new(color.fuchsia, 0))
+plotshape(longSignal, "Entry", shape.triangleup, location.belowbar, color.new(color.green, 0), size=size.small)
+
+alertcondition(longSignal, "trend_v1 LONG entry", "trend_v1 v1.0.0 LONG {{ticker}} @ {{close}}")
+alertcondition(strategy.position_size > 0 and close < sma50, "trend_v1 EXIT", "trend_v1 v1.0.0 EXIT {{ticker}} @ {{close}}")

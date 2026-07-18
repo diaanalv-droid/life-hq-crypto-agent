@@ -1,7 +1,7 @@
 name: crypto-pipeline
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/15 * * * *'   # every 15 min (GitHub min ~5m, best-effort)
   workflow_dispatch: {}
 permissions:
   contents: write
@@ -16,12 +16,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Run strategy validity tests (gate)
-        run: node tests/strategy.test.js
+
+      # CI GATE: the whole run aborts if any strategy/engine validity test fails.
+      - name: Run validity tests (gate)
+        run: |
+          node tests/strategy.test.js
+          node tests/engine.test.js
+
       - name: Run strategist scan
         env:
           COINGECKO_KEY: ${{ secrets.COINGECKO_KEY }}
         run: node scripts/scan.js
+
       - name: Commit data
         run: |
           git config user.name  "life-hq-bot"
@@ -30,7 +36,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No data changes"
           else
-            git commit -m "scan: refresh $(date -u +%FT%TZ)"
+            git commit -m "pipeline: refresh $(date -u +%FT%TZ)"
             git pull --rebase --autostash origin main || true
-            git push || (sleep 5 && git pull --rebase --autostash origin main && git push)
+            git push
           fi
